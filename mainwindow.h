@@ -3,13 +3,10 @@
 
 #include <QMainWindow>
 #include <QTimer>
-#include <QProcess>
-#include <QFile>
 #include <QColor>
-#include <QAtomicInt>
 #include <QQueue>
 #include <QMutex>
-#include <atomic>
+#include "AdbManager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -47,7 +44,8 @@ private:
     QMutex m_mutex;
 };
 
-// 前向声明 SerialPortManager 类
+// 前向声明
+class AdbManager;
 class SerialPortManager;
 
 class MainWindow : public QMainWindow
@@ -73,27 +71,22 @@ private slots:
 
     // 日志相关
     void processLogQueue();
-    void checkDeviceStatus();
     void startLogcat();
     void stopLogcat();
     void exportLog();
     void captureScreenshot();
-    void onLogcatReadyRead();
-    void onLogcatFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     Ui::MainWindow *ui;
     QString currentConnection;           // 当前连接类型（ADB/串口）
 
     QTimer *logUpdateTimer;              // 定时更新日志
-    QTimer *deviceCheckTimer;            // 定时检测设备状态
 
-    QProcess *m_logcatProcess = nullptr; // 日志抓取进程
-    QFile m_logFile;                     // 日志输出文件
-    std::atomic<bool> m_stopLogFlag;     // 停止标志
     LogQueue m_logQueue;                 // 日志队列
 
     SerialPortManager *serialManager;    // 串口管理对象
+    AdbManager *adbManager;              // ADB管理对象
+    AdbManager *m_adbManager;            // 添加成员变量
 
 private:
     // 工具方法
@@ -104,11 +97,6 @@ private:
 
     QColor colorForLevel(const QString &level);
     int levelIndex(const QString &level);
-
-    QString runCommand(const QString &cmd);
-
-    // 获取 adb.exe 路径（优先程序目录）
-    QString getAdbPath() const;
 };
 
 #endif // MAINWINDOW_H

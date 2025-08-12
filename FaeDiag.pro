@@ -8,12 +8,14 @@ TEMPLATE = app
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    SerialPortManager.cpp
+    SerialPortManager.cpp \
+    AdbManager.cpp
 
 HEADERS += \
     mainwindow.h \
     LogQueue.h \
-    SerialPortManager.h
+    SerialPortManager.h \
+    AdbManager.h
 
 FORMS += \
     mainwindow.ui

@@ -1,2 +1,5 @@
 # 屏蔽不需要的文件和目录
 *.user
+*.bat
+/build/
+.vscode/
